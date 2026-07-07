@@ -18,6 +18,7 @@ The repository starts with a pure Swift package:
 - `RoyalDashCore`
 - K1G packet building/parsing
 - RSA/AES dash authentication state machine
+- dash transport routing for frozen UDP control/RTP endpoints
 - selected dash command bytes
 - RTP packetizer
 - offline fake dash session and demo CLI
