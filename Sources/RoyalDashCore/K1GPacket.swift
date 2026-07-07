@@ -54,8 +54,39 @@ public enum K1GPacket {
     public static func parseIncoming(_ data: [UInt8]) -> [Tlv] {
         guard data.count >= 8 else { return [] }
         let segmentCount = (Int(data[2]) << 8) | Int(data[3])
+        return parseTlvs(data, offset: 8, count: segmentCount)
+    }
+
+    public static func buildIncoming(_ tlvs: [Tlv]) -> [UInt8] {
+        var out: [UInt8] = [0x00, 0x00]
+        out.append(UInt8((tlvs.count >> 8) & 0xFF))
+        out.append(UInt8(tlvs.count & 0xFF))
+        out.append(contentsOf: [0x00, 0x00, 0x00, 0x00])
+
+        for tlv in tlvs {
+            out.append(tlv.type)
+            out.append(tlv.sub)
+            out.append(UInt8((tlv.value.count >> 8) & 0xFF))
+            out.append(UInt8(tlv.value.count & 0xFF))
+            out.append(contentsOf: tlv.value)
+        }
+
+        out[0] = UInt8((out.count >> 8) & 0xFF)
+        out[1] = UInt8(out.count & 0xFF)
+        return out
+    }
+
+    public static func parseOutgoingControl(_ data: [UInt8]) -> [Tlv] {
+        guard data.count >= 17 else { return [] }
+        let segmentCount = (Int(data[2]) << 8) | Int(data[3])
+        let tlvCount = max(0, segmentCount - 1)
+        guard let magicIndex = data.firstIndex(ofSubsequence: magic) else { return [] }
+        return parseTlvs(data, offset: magicIndex + 5, count: tlvCount)
+    }
+
+    private static func parseTlvs(_ data: [UInt8], offset start: Int, count segmentCount: Int) -> [Tlv] {
         var tlvs: [Tlv] = []
-        var offset = 8
+        var offset = start
         var segment = 0
 
         while segment < segmentCount, offset + 4 <= data.count {
