@@ -156,6 +156,7 @@ Se esse marco passar, o app completo e uma construcao normal de produto. Se falh
 
 - `codex/fake-dash`: simulador offline do painel para validar pacotes sem a moto.
 - `codex/dash-auth`: maquina de autenticacao RSA/AES do lado iOS.
+- `codex/udp-transport`: roteamento dos datagramas UDP de controle/RTP e modo loopback para o fake dash.
 
 ## Fontes consultadas
 
