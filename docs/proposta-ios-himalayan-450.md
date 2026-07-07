@@ -152,6 +152,11 @@ O primeiro marco nao deve ser "app completo"; deve ser **prova no painel real**:
 
 Se esse marco passar, o app completo e uma construcao normal de produto. Se falhar, descobrimos cedo qual limite do iOS exige outra estrategia.
 
+## Branches tecnicas iniciais
+
+- `codex/fake-dash`: simulador offline do painel para validar pacotes sem a moto.
+- `codex/dash-auth`: maquina de autenticacao RSA/AES do lado iOS.
+
 ## Fontes consultadas
 
 - Repositorio Android: https://github.com/subtlesayak/open-dash
