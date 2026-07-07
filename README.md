@@ -19,6 +19,7 @@ The repository starts with a pure Swift package:
 - K1G packet building/parsing
 - RSA/AES dash authentication state machine
 - dash transport routing for frozen UDP control/RTP endpoints
+- incoming dash dispatcher for auth, frame ACKs, and button ACKs
 - selected dash command bytes
 - RTP packetizer
 - offline fake dash session and demo CLI
