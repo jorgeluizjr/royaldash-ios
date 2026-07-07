@@ -19,6 +19,7 @@ The repository starts with a pure Swift package:
 - K1G packet building/parsing
 - selected dash command bytes
 - RTP packetizer
+- offline fake dash session and demo CLI
 - unit tests for protocol-critical behavior
 
 The SwiftUI iOS app shell and Xcode project come next.

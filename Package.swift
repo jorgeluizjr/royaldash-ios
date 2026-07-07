@@ -13,10 +13,18 @@ let package = Package(
             name: "RoyalDashCore",
             targets: ["RoyalDashCore"]
         ),
+        .executable(
+            name: "royaldash-fake-dash",
+            targets: ["RoyalDashFakeDash"]
+        ),
     ],
     targets: [
         .target(
             name: "RoyalDashCore"
+        ),
+        .executableTarget(
+            name: "RoyalDashFakeDash",
+            dependencies: ["RoyalDashCore"]
         ),
         .testTarget(
             name: "RoyalDashCoreTests",

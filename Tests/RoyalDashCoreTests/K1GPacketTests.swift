@@ -28,4 +28,18 @@ final class K1GPacketTests: XCTestCase {
             Tlv(type: 0x09, sub: 0x06, value: [0x55]),
         ])
     }
+
+    func testBuildsIncomingShortHeaderPacket() {
+        let packet = K1GPacket.buildIncoming([
+            Tlv(type: 0x09, sub: 0x04, value: [0x55]),
+        ])
+
+        XCTAssertEqual(packet.hexString(separator: ""), "000D0001000000000904000155")
+    }
+
+    func testParsesOutgoingControlTlvs() {
+        XCTAssertEqual(K1GPacket.parseOutgoingControl(DashCommands.authRequest()), [
+            Tlv(type: 0x08, sub: 0x04, value: [0x01]),
+        ])
+    }
 }

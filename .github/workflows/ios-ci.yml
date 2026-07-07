@@ -37,7 +37,9 @@ jobs:
 
       - name: Test Swift package core
         if: ${{ hashFiles('Package.swift') != '' }}
-        run: swift test
+        run: |
+          swift build
+          swift test
 
       - name: Build for simulator
         if: ${{ hashFiles(env.XCODE_PROJECT_FILE) != '' }}
