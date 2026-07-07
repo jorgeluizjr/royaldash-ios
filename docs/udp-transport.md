@@ -29,4 +29,6 @@ Modo fake dash:
 
 ## Proximo incremento
 
-Ainda falta a parte mais sensivel: socket RX bindado em `:2002` antes do burst inicial e, depois, um loop de recebimento que alimente `DashAuth`, ACKs de frame e eventos de botao.
+O dispatcher puro de recebimento ja existe em `DashIncomingDispatcher`.
+
+Ainda falta a parte mais sensivel de rede real: socket RX bindado em `:2002` antes do burst inicial e um loop assincrono que alimente `DashIncomingDispatcher`.
