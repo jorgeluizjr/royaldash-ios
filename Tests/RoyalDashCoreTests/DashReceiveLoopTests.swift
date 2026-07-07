@@ -13,7 +13,7 @@ final class DashReceiveLoopTests: XCTestCase {
             dispatcher: DashIncomingDispatcher(auth: DashAuth(ssid: "RE_TEST")),
             transport: transport
         )
-        var fakeDash = FakeDashSession()
+        let fakeDash = FakeDashSession()
 
         let events = try loop.handleIncomingDatagram(fakeDash.frameDecodedNotify(kind: .idr))
 
@@ -34,7 +34,7 @@ final class DashReceiveLoopTests: XCTestCase {
             dispatcher: DashIncomingDispatcher(auth: DashAuth(ssid: "RE_TEST")),
             transport: transport
         )
-        let fakeDash = FakeDashSession()
+        var fakeDash = FakeDashSession()
 
         let events = try loop.handleIncomingDatagram(fakeDash.buttonEvent(code: 0x06))
 
