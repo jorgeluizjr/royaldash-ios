@@ -1,0 +1,64 @@
+name: iOS CI
+
+on:
+  push:
+    branches:
+      - main
+      - "codex/**"
+  pull_request:
+  workflow_dispatch:
+
+env:
+  XCODE_PROJECT: RoyalDash.xcodeproj
+  XCODE_PROJECT_FILE: RoyalDash.xcodeproj/project.pbxproj
+  XCODE_SCHEME: RoyalDash
+  SIMULATOR_DESTINATION: platform=iOS Simulator,name=iPhone 15
+
+jobs:
+  build:
+    name: Build and test iOS app
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+
+      - name: Skip until Xcode project exists
+        if: ${{ hashFiles(env.XCODE_PROJECT_FILE) == '' }}
+        run: |
+          echo "No ${XCODE_PROJECT} found yet."
+          echo "Create the Xcode project, or update XCODE_PROJECT/XCODE_SCHEME in this workflow."
+
+      - name: Test Swift package core
+        if: ${{ hashFiles('Package.swift') != '' }}
+        run: swift test
+
+      - name: Build for simulator
+        if: ${{ hashFiles(env.XCODE_PROJECT_FILE) != '' }}
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "$SIMULATOR_DESTINATION" \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            clean build
+
+      - name: Run tests
+        if: ${{ hashFiles(env.XCODE_PROJECT_FILE) != '' }}
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "$SIMULATOR_DESTINATION" \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            test

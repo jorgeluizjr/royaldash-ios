@@ -1,0 +1,13 @@
+.build/
+.swiftpm/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Local machine secrets
+.env
+*.p12
+*.mobileprovision
+
+# Temporary analysis clones and generated scratch files
+tmp/
