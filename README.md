@@ -30,6 +30,7 @@ The repository starts with a pure Swift package:
 
 The SwiftUI iOS app shell and Xcode project are now present.
 The first navigable screen prototype is documented in `docs/screen-prototype.md`.
+The app prototype is connected to `RoyalDashCore` through a simulated app model documented in `docs/app-core-model.md`.
 
 ## CI
 
@@ -53,6 +54,7 @@ See:
 
 - `docs/proposta-ios-himalayan-450.md`
 - `docs/github-actions-ios.md`
+- `docs/app-core-model.md`
 - `docs/dash-session.md`
 - `docs/h264-nal-processor.md`
 - `docs/screen-prototype.md`

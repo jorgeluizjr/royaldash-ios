@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @State private var connectionState: ConnectionState = .offline
+    @StateObject private var connection = DashConnectionModel()
     @State private var selectedTab: AppTab = .panel
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            PanelView(connectionState: $connectionState)
+            PanelView(connection: connection)
                 .tabItem {
                     Label("Painel", systemImage: "motorcycle")
                 }
@@ -41,24 +41,24 @@ struct DashboardView: View {
 }
 
 private struct PanelView: View {
-    @Binding var connectionState: ConnectionState
+    @ObservedObject var connection: DashConnectionModel
 
     var body: some View {
         PrototypeScreen(title: "RoyalDash") {
-            StatusHeader(state: connectionState)
+            StatusHeader(connection: connection)
 
             Button {
-                connectionState.advance()
+                connection.advance()
             } label: {
-                Label(connectionState.actionTitle, systemImage: connectionState.actionSymbol)
+                Label(connection.phase.actionTitle, systemImage: connection.phase.actionSymbol)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
 
-            TftPreviewCard(state: connectionState)
+            TftPreviewCard(state: connection.phase)
 
-            MetricsGrid(state: connectionState)
+            MetricsGrid(connection: connection)
 
             SectionPanel(title: "Rota atual") {
                 InfoRow(symbol: "location.north.line", title: "Serra do Rastro", subtitle: "126 km restantes", accessory: "2h 18m")
@@ -67,9 +67,11 @@ private struct PanelView: View {
             }
 
             SectionPanel(title: "Diagnostico rapido") {
-                InfoRow(symbol: "antenna.radiowaves.left.and.right", title: "Controle UDP", subtitle: "TX :2000 / RX :2002", accessory: connectionState == .offline ? "--" : "OK")
+                InfoRow(symbol: "antenna.radiowaves.left.and.right", title: "Controle UDP", subtitle: "TX :2000 / RX :2002", accessory: connection.controlStatus)
                 Divider()
-                InfoRow(symbol: "video", title: "RTP H.264", subtitle: "Destino 192.168.1.1:5000", accessory: connectionState == .streaming ? "Ativo" : "Parado")
+                InfoRow(symbol: "video", title: "RTP H.264", subtitle: "Destino 192.168.1.1:5000", accessory: connection.rtpStatus)
+                Divider()
+                InfoRow(symbol: "list.bullet.rectangle", title: "Ultimo evento", subtitle: connection.lastEvent, accessory: "\(connection.packetCount) pkt")
             }
         }
     }
@@ -219,7 +221,11 @@ private struct PrototypeScreen<Content: View>: View {
 }
 
 private struct StatusHeader: View {
-    let state: ConnectionState
+    @ObservedObject var connection: DashConnectionModel
+
+    private var state: DashConnectionPhase {
+        connection.phase
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -242,7 +248,7 @@ private struct StatusHeader: View {
             HStack(spacing: 10) {
                 StatusPill(title: "Wi-Fi", value: state.wifiValue)
                 StatusPill(title: "Auth", value: state.authValue)
-                StatusPill(title: "Stream", value: state.streamValue)
+                StatusPill(title: "Stream", value: connection.rtpStatus)
             }
         }
         .padding()
@@ -251,7 +257,7 @@ private struct StatusHeader: View {
 }
 
 private struct TftPreviewCard: View {
-    let state: ConnectionState
+    let state: DashConnectionPhase
 
     var body: some View {
         SectionPanel(title: "Preview TFT") {
@@ -321,13 +327,17 @@ private struct StatusPill: View {
 }
 
 private struct MetricsGrid: View {
-    let state: ConnectionState
+    @ObservedObject var connection: DashConnectionModel
+
+    private var state: DashConnectionPhase {
+        connection.phase
+    }
 
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
             MetricTile(title: "Painel", value: state.title, symbol: "speedometer")
-            MetricTile(title: "Pacotes", value: state == .offline ? "0" : "128", symbol: "network")
-            MetricTile(title: "Video", value: state == .streaming ? "4 fps" : "0 fps", symbol: "rectangle.inset.filled")
+            MetricTile(title: "Pacotes", value: "\(connection.packetCount)", symbol: "network")
+            MetricTile(title: "Video", value: connection.rtpStatus == "--" ? "0 fps" : connection.rtpStatus, symbol: "rectangle.inset.filled")
             MetricTile(title: "Bateria", value: "92%", symbol: "iphone")
         }
     }
@@ -503,25 +513,7 @@ private enum AppTab {
     case settings
 }
 
-private enum ConnectionState {
-    case offline
-    case wifi
-    case authenticating
-    case streaming
-
-    mutating func advance() {
-        switch self {
-        case .offline:
-            self = .wifi
-        case .wifi:
-            self = .authenticating
-        case .authenticating:
-            self = .streaming
-        case .streaming:
-            self = .offline
-        }
-    }
-
+private extension DashConnectionPhase {
     var title: String {
         switch self {
         case .offline:
@@ -532,6 +524,8 @@ private enum ConnectionState {
             return "Autenticando"
         case .streaming:
             return "Transmitindo"
+        case .failed:
+            return "Erro"
         }
     }
 
@@ -545,6 +539,8 @@ private enum ConnectionState {
             return "Handshake RSA/AES em andamento"
         case .streaming:
             return "RTP H.264 ativo"
+        case .failed(let reason):
+            return reason
         }
     }
 
@@ -558,6 +554,8 @@ private enum ConnectionState {
             return "Iniciar Stream"
         case .streaming:
             return "Desconectar"
+        case .failed:
+            return "Reiniciar"
         }
     }
 
@@ -571,6 +569,8 @@ private enum ConnectionState {
             return "play.circle"
         case .streaming:
             return "xmark.circle"
+        case .failed:
+            return "arrow.clockwise"
         }
     }
 
@@ -584,6 +584,8 @@ private enum ConnectionState {
             return "lock.rotation"
         case .streaming:
             return "dot.radiowaves.left.and.right"
+        case .failed:
+            return "exclamationmark.triangle"
         }
     }
 
@@ -597,6 +599,8 @@ private enum ConnectionState {
             return .purple
         case .streaming:
             return .teal
+        case .failed:
+            return .red
         }
     }
 
@@ -612,6 +616,8 @@ private enum ConnectionState {
             return "RSA"
         case .streaming:
             return "OK"
+        case .failed:
+            return "Erro"
         }
     }
 
