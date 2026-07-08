@@ -5,6 +5,7 @@ import RoyalDashCore
 @MainActor
 final class DashConnectionModel: ObservableObject {
     @Published private(set) var phase: DashConnectionPhase = .offline
+    @Published var mode: DashConnectionMode = .simulated
     @Published private(set) var packetCount = 0
     @Published private(set) var lastEvent = "Aguardando acao"
     @Published private(set) var controlStatus = "--"
@@ -13,22 +14,52 @@ final class DashConnectionModel: ObservableObject {
     private var peer = RecordingDatagramPeer()
     private var session: DashSession<RecordingDatagramPeer>?
     private var fakeDash = FakeDashSession()
+    private var liveRuntime: LiveDashRuntime?
 
     func advance() {
         do {
-            switch phase {
-            case .offline, .failed:
-                connectWifi()
-            case .wifi:
-                try startAuthentication()
-            case .authenticating:
-                try confirmAuthenticationAndStartStream()
-            case .streaming:
-                disconnect()
+            switch mode {
+            case .simulated:
+                try advanceSimulated()
+            case .live:
+                try advanceLive()
             }
         } catch {
             phase = .failed("Falha: \(error.localizedDescription)")
-            lastEvent = "Erro no fluxo simulado"
+            lastEvent = mode == .simulated ? "Erro no fluxo simulado" : "Erro no fluxo real"
+        }
+    }
+
+    func setMode(_ mode: DashConnectionMode) {
+        guard self.mode != mode else { return }
+        disconnect()
+        self.mode = mode
+        lastEvent = mode == .simulated ? "Modo simulado ativo" : "Modo real preparado"
+    }
+
+    private func advanceSimulated() throws {
+        switch phase {
+        case .offline, .failed:
+            connectWifi()
+        case .wifi:
+            try startAuthentication()
+        case .authenticating:
+            try confirmAuthenticationAndStartStream()
+        case .streaming:
+            disconnect()
+        }
+    }
+
+    private func advanceLive() throws {
+        switch phase {
+        case .offline, .failed:
+            prepareLiveRuntime()
+        case .wifi:
+            try liveRuntime?.startAuthentication()
+        case .authenticating:
+            try liveRuntime?.startProjectionProbe()
+        case .streaming:
+            disconnect()
         }
     }
 
@@ -91,11 +122,48 @@ final class DashConnectionModel: ObservableObject {
     private func disconnect() {
         session = nil
         fakeDash = FakeDashSession()
+        liveRuntime?.stop()
+        liveRuntime = nil
         phase = .offline
         packetCount = 0
         controlStatus = "--"
         rtpStatus = "--"
         lastEvent = "Sessao encerrada"
+    }
+
+    private func prepareLiveRuntime() {
+        let runtime = LiveDashRuntime()
+        runtime.onUpdate = { [weak self] update in
+            Task { @MainActor in
+                self?.apply(update)
+            }
+        }
+        liveRuntime = runtime
+        runtime.prepare()
+    }
+
+    private func apply(_ update: LiveDashRuntimeUpdate) {
+        phase = update.phase
+        packetCount = update.packetCount
+        controlStatus = update.controlStatus
+        rtpStatus = update.rtpStatus
+        lastEvent = update.lastEvent
+    }
+}
+
+enum DashConnectionMode: String, CaseIterable, Identifiable {
+    case simulated
+    case live
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .simulated:
+            return "Simulado"
+        case .live:
+            return "TFT real"
+        }
     }
 }
 

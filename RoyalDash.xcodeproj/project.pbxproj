@@ -12,6 +12,7 @@
 		1A0000010000000000000003 /* RoyalDashAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000013 /* RoyalDashAppTests.swift */; };
 		1A0000010000000000000006 /* DashConnectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000016 /* DashConnectionModel.swift */; };
 		1A0000010000000000000007 /* RoyalDashCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000010000000000000060 /* RoyalDashCore */; };
+		1A0000010000000000000008 /* LiveDashRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000017 /* LiveDashRuntime.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		1A0000010000000000000014 /* RoyalDash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoyalDash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0000010000000000000015 /* RoyalDashAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoyalDashAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0000010000000000000016 /* DashConnectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashConnectionModel.swift; sourceTree = "<group>"; };
+		1A0000010000000000000017 /* LiveDashRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDashRuntime.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				1A0000010000000000000011 /* RoyalDashApp.swift */,
 				1A0000010000000000000012 /* DashboardView.swift */,
 				1A0000010000000000000016 /* DashConnectionModel.swift */,
+				1A0000010000000000000017 /* LiveDashRuntime.swift */,
 			);
 			path = RoyalDashApp;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 				1A0000010000000000000001 /* RoyalDashApp.swift in Sources */,
 				1A0000010000000000000002 /* DashboardView.swift in Sources */,
 				1A0000010000000000000006 /* DashConnectionModel.swift in Sources */,
+				1A0000010000000000000008 /* LiveDashRuntime.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
