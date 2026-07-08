@@ -10,6 +10,8 @@
 		1A0000010000000000000001 /* RoyalDashApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000011 /* RoyalDashApp.swift */; };
 		1A0000010000000000000002 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000012 /* DashboardView.swift */; };
 		1A0000010000000000000003 /* RoyalDashAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000013 /* RoyalDashAppTests.swift */; };
+		1A0000010000000000000006 /* DashConnectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000010000000000000016 /* DashConnectionModel.swift */; };
+		1A0000010000000000000007 /* RoyalDashCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000010000000000000060 /* RoyalDashCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +30,7 @@
 		1A0000010000000000000013 /* RoyalDashAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoyalDashAppTests.swift; sourceTree = "<group>"; };
 		1A0000010000000000000014 /* RoyalDash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoyalDash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0000010000000000000015 /* RoyalDashAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoyalDashAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A0000010000000000000016 /* DashConnectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashConnectionModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A0000010000000000000007 /* RoyalDashCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +66,7 @@
 			children = (
 				1A0000010000000000000011 /* RoyalDashApp.swift */,
 				1A0000010000000000000012 /* DashboardView.swift */,
+				1A0000010000000000000016 /* DashConnectionModel.swift */,
 			);
 			path = RoyalDashApp;
 			sourceTree = "<group>";
@@ -99,6 +104,9 @@
 			dependencies = (
 			);
 			name = RoyalDash;
+			packageProductDependencies = (
+				1A0000010000000000000060 /* RoyalDashCore */,
+			);
 			productName = RoyalDash;
 			productReference = 1A0000010000000000000014 /* RoyalDash.app */;
 			productType = "com.apple.product-type.application";
@@ -149,6 +157,9 @@
 				Base,
 			);
 			mainGroup = 1A0000010000000000000021;
+			packageReferences = (
+				1A0000010000000000000061 /* XCLocalSwiftPackageReference "." */,
+			);
 			productRefGroup = 1A0000010000000000000024 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -183,6 +194,7 @@
 			files = (
 				1A0000010000000000000001 /* RoyalDashApp.swift in Sources */,
 				1A0000010000000000000002 /* DashboardView.swift in Sources */,
+				1A0000010000000000000006 /* DashConnectionModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +442,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		1A0000010000000000000061 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1A0000010000000000000060 /* RoyalDashCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A0000010000000000000061 /* XCLocalSwiftPackageReference "." */;
+			productName = RoyalDashCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A0000010000000000000020 /* Project object */;
 }
