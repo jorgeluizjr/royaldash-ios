@@ -10,6 +10,14 @@ public struct DashReceiveLoop<Peer: DatagramPeer> {
         self.transport = transport
     }
 
+    public mutating func sendControl(_ packet: [UInt8]) throws {
+        try transport.sendControl(packet)
+    }
+
+    public func sendRtp(_ packet: [UInt8]) throws {
+        try transport.sendRtp(packet)
+    }
+
     @discardableResult
     public mutating func handleIncomingDatagram(_ packet: [UInt8]) throws -> [DashIncomingEvent] {
         let result = try dispatcher.receive(packet)

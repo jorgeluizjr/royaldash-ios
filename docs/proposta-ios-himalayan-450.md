@@ -157,6 +157,9 @@ Se esse marco passar, o app completo e uma construcao normal de produto. Se falh
 - `codex/fake-dash`: simulador offline do painel para validar pacotes sem a moto.
 - `codex/dash-auth`: maquina de autenticacao RSA/AES do lado iOS.
 - `codex/udp-transport`: roteamento dos datagramas UDP de controle/RTP e modo loopback para o fake dash.
+- `codex/rx-dispatcher`: roteamento de TLVs recebidos, ACKs obrigatorios e retries de auth.
+- `codex/rx-loop`: cola entre socket RX, dispatcher e transporte.
+- `codex/dash-session`: fachada de sessao para o app iniciar auth, consumir eventos e enviar comandos/RTP.
 
 ## Fontes consultadas
 
