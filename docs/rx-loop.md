@@ -2,12 +2,12 @@
 
 `DashReceiveLoop` e o elo entre rede e protocolo.
 
-Ele ainda nao gerencia uma sessao completa, mas ja faz o caminho essencial:
+Ele fica abaixo de `DashSession` e faz o caminho essencial:
 
 1. recebe um datagrama vindo do painel;
 2. chama `DashIncomingDispatcher`;
 3. envia cada resposta usando `DashTransport.sendControl(...)`;
-4. devolve eventos para a camada de sessao/app.
+4. devolve eventos para `DashSession` e para o app.
 
 ## Socket real
 
