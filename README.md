@@ -29,6 +29,7 @@ The repository starts with a pure Swift package:
 - unit tests for protocol-critical behavior
 
 The SwiftUI iOS app shell and Xcode project are now present.
+The first navigable screen prototype is documented in `docs/screen-prototype.md`.
 
 ## CI
 
@@ -54,3 +55,4 @@ See:
 - `docs/github-actions-ios.md`
 - `docs/dash-session.md`
 - `docs/h264-nal-processor.md`
+- `docs/screen-prototype.md`
