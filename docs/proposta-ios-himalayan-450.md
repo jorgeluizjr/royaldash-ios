@@ -160,6 +160,7 @@ Se esse marco passar, o app completo e uma construcao normal de produto. Se falh
 - `codex/rx-dispatcher`: roteamento de TLVs recebidos, ACKs obrigatorios e retries de auth.
 - `codex/rx-loop`: cola entre socket RX, dispatcher e transporte.
 - `codex/dash-session`: fachada de sessao para o app iniciar auth, consumir eventos e enviar comandos/RTP.
+- `codex/nal-processor`: normalizacao de NALs H.264 Annex-B/AVCC, filtro AUD/SEI e cache SPS/PPS.
 
 ## Fontes consultadas
 
