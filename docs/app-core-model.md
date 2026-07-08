@@ -1,8 +1,8 @@
 # App Core Model
 
-`DashConnectionModel` liga o prototipo SwiftUI ao `RoyalDashCore` em modo simulado.
+`DashConnectionModel` liga o prototipo SwiftUI ao `RoyalDashCore` em modo simulado e tambem prepara um modo real inicial para teste com o TFT.
 
-O modelo ainda nao abre sockets reais. Ele usa:
+No modo simulado ele usa:
 
 - `DashSession` para iniciar auth, processar datagramas e enviar controle/RTP;
 - `FakeDashSession` para simular respostas do painel;
@@ -15,4 +15,20 @@ O modelo ainda nao abre sockets reais. Ele usa:
 3. `Autenticando` -> confirma auth, envia `projectionFrame` e um pacote RTP de amostra.
 4. `Transmitindo` -> encerra a sessao simulada.
 
-Essa etapa prepara a futura troca do fake dash por `NetworkUdpReceiver` e `NetworkUdpPeer` sem redesenhar a UI.
+## Modo TFT real
+
+O modo `TFT real` usa `LiveDashRuntime`, que encapsula:
+
+- `NetworkUdpPeer` para envio UDP;
+- `NetworkUdpReceiver` na porta local de recepcao configurada;
+- `DashSession` com a configuracao `.tripperDash`.
+
+Fluxo esperado para o primeiro teste no iPhone:
+
+1. Conectar manualmente o iPhone ao Wi-Fi do TFT.
+2. Selecionar `TFT real` no app.
+3. Tocar em `Conectar` para preparar o runtime.
+4. Tocar em `Autenticar` para enviar o auth request e ouvir respostas.
+5. Tocar em `Iniciar Stream` para enviar um frame/RTP de prova.
+
+Essa etapa ainda nao gera video H.264 real da UI; ela cria o caminho de rede para validar permissao local, portas UDP, autenticacao e diagnostico basico com a moto.

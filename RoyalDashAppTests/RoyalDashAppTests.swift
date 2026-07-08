@@ -9,6 +9,7 @@ final class RoyalDashAppTests: XCTestCase {
     @MainActor
     func testSimulatedConnectionModelExercisesCoreFlow() {
         let model = DashConnectionModel()
+        XCTAssertEqual(model.mode, .simulated)
 
         model.advance()
         XCTAssertEqual(model.phase, .wifi)
@@ -25,5 +26,21 @@ final class RoyalDashAppTests: XCTestCase {
         model.advance()
         XCTAssertEqual(model.phase, .offline)
         XCTAssertEqual(model.packetCount, 0)
+    }
+
+    @MainActor
+    func testConnectionModeSwitchResetsSessionState() {
+        let model = DashConnectionModel()
+
+        model.advance()
+        XCTAssertEqual(model.phase, .wifi)
+
+        model.setMode(.live)
+
+        XCTAssertEqual(model.mode, .live)
+        XCTAssertEqual(model.phase, .offline)
+        XCTAssertEqual(model.packetCount, 0)
+        XCTAssertEqual(model.controlStatus, "--")
+        XCTAssertEqual(model.rtpStatus, "--")
     }
 }

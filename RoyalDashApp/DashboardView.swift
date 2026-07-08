@@ -47,6 +47,16 @@ private struct PanelView: View {
         PrototypeScreen(title: "RoyalDash") {
             StatusHeader(connection: connection)
 
+            Picker("Modo", selection: Binding(
+                get: { connection.mode },
+                set: { connection.setMode($0) }
+            )) {
+                ForEach(DashConnectionMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+
             Button {
                 connection.advance()
             } label: {
@@ -70,6 +80,8 @@ private struct PanelView: View {
                 InfoRow(symbol: "antenna.radiowaves.left.and.right", title: "Controle UDP", subtitle: "TX :2000 / RX :2002", accessory: connection.controlStatus)
                 Divider()
                 InfoRow(symbol: "video", title: "RTP H.264", subtitle: "Destino 192.168.1.1:5000", accessory: connection.rtpStatus)
+                Divider()
+                InfoRow(symbol: "switch.2", title: "Modo ativo", subtitle: connection.mode.title, accessory: connection.phase.actionTitle)
                 Divider()
                 InfoRow(symbol: "list.bullet.rectangle", title: "Ultimo evento", subtitle: connection.lastEvent, accessory: "\(connection.packetCount) pkt")
             }
