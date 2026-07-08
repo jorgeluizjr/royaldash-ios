@@ -17,12 +17,18 @@ Ele recebe um datagrama K1G vindo do TFT, parseia os TLVs e devolve:
 - `09 00 ... code`: devolve `buttonAck(code)` e publica evento de botao.
 - TLVs desconhecidos: publica evento `unknown` sem resposta.
 
+## Receive loop
+
+`DashReceiveLoop` conecta o dispatcher ao transporte:
+
+- passa cada datagrama recebido para `DashIncomingDispatcher`;
+- envia cada reply com `DashTransport.sendControl(...)`;
+- devolve os eventos para a futura `DashSession`.
+
 ## Proximo passo
 
-Criar o socket/loop real:
+Criar a sessao real:
 
-1. Abrir RX `:2002` antes do burst inicial.
-2. Receber datagramas continuamente.
-3. Passar cada datagrama para `DashIncomingDispatcher`.
-4. Enviar cada reply com `DashTransport.sendControl(...)`.
-5. Publicar eventos para a futura `DashSession`.
+1. Abrir `NetworkUdpReceiver` em `:2002` antes do burst inicial.
+2. Enviar `DashCommands.initialBurst(...)` quando essa lista existir no core.
+3. Ligar eventos do `DashReceiveLoop` ao estado da sessao.
