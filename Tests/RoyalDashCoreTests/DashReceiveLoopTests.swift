@@ -58,7 +58,7 @@ final class DashReceiveLoopTests: XCTestCase {
             ),
             transport: transport
         )
-        let fakeDash = FakeDashSession()
+        var fakeDash = FakeDashSession()
 
         let offered = fakeDash.receiveControl(DashCommands.authRequest())
         XCTAssertEqual(try loop.handleIncomingDatagram(offered.packets[0]), [])
