@@ -38,7 +38,7 @@ GitHub Actions is configured in:
 
 - `.github/workflows/ios-ci.yml`
 
-It runs `swift test` and, with `RoyalDash.xcodeproj` present, builds and tests the iOS app on the simulator available in GitHub Actions.
+It runs on pull requests and manual dispatches. The workflow runs `swift test` and, with `RoyalDash.xcodeproj` present, builds and tests the iOS app on the simulator available in GitHub Actions.
 
 ## Hardware Testing
 
