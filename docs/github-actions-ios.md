@@ -3,7 +3,7 @@
 Vamos usar GitHub Actions como build remoto de Xcode. A ideia e simples:
 
 1. O codigo fica no GitHub.
-2. Cada push roda em um runner macOS com Xcode.
+2. Cada pull request roda em um runner macOS com Xcode.
 3. O runner compila e testa o app em um simulador de iPhone disponivel no macOS do GitHub Actions.
 4. O iPhone fisico continua sendo usado para validar o painel TFT real.
 
@@ -15,7 +15,7 @@ Workflow:
 
 Ele esta preparado para:
 
-- Rodar em `push`, `pull_request` e manualmente por `workflow_dispatch`.
+- Rodar em `pull_request` e manualmente por `workflow_dispatch`.
 - Usar `macos-latest`.
 - Compilar `RoyalDash.xcodeproj`.
 - Usar o scheme `RoyalDash`.
