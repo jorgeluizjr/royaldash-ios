@@ -28,7 +28,7 @@ The repository starts with a pure Swift package:
 - offline fake dash session and demo CLI
 - unit tests for protocol-critical behavior
 
-The SwiftUI iOS app shell and Xcode project come next.
+The SwiftUI iOS app shell and Xcode project are now present.
 
 ## CI
 
@@ -36,7 +36,7 @@ GitHub Actions is configured in:
 
 - `.github/workflows/ios-ci.yml`
 
-It runs `swift test` immediately. Once `RoyalDash.xcodeproj` exists, it will also build and test the iOS app on an iPhone 15 simulator.
+It runs `swift test` and, with `RoyalDash.xcodeproj` present, builds and tests the iOS app on the simulator available in GitHub Actions.
 
 ## Hardware Testing
 

@@ -161,6 +161,7 @@ Se esse marco passar, o app completo e uma construcao normal de produto. Se falh
 - `codex/rx-loop`: cola entre socket RX, dispatcher e transporte.
 - `codex/dash-session`: fachada de sessao para o app iniciar auth, consumir eventos e enviar comandos/RTP.
 - `codex/nal-processor`: normalizacao de NALs H.264 Annex-B/AVCC, filtro AUD/SEI e cache SPS/PPS.
+- `codex/app-shell`: shell SwiftUI inicial e projeto Xcode com build/test no simulador.
 
 ## Fontes consultadas
 
