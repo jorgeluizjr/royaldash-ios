@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoyalDash iOS - Prototipo de Telas</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211f;
+      --muted: #63706c;
+      --line: #d9e0dc;
+      --paper: #f6f3ec;
+      --panel: #ffffff;
+      --mist: #eef4f1;
+      --teal: #0f766e;
+      --blue: #2563eb;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --green: #15803d;
+      --violet: #7c3aed;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(246, 243, 236, 0.96), rgba(238, 244, 241, 0.9)),
+        var(--paper);
+    }
+
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 22px 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 22px 42px;
+    }
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .screen-label {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .phone {
+      width: min(100%, 322px);
+      margin: 0 auto;
+      border: 10px solid #111827;
+      border-radius: 34px;
+      background: #111827;
+      box-shadow: 0 18px 44px rgba(23, 33, 31, 0.16);
+      overflow: hidden;
+    }
+
+    .screen {
+      min-height: 660px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #f5f7f6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .statusbar {
+      height: 34px;
+      padding: 9px 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .status-icons {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .signal,
+    .battery {
+      width: 18px;
+      height: 9px;
+      border: 1.5px solid currentColor;
+      border-radius: 3px;
+      display: inline-block;
+      position: relative;
+    }
+
+    .signal::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 2px;
+      width: 10px;
+      height: 3px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      right: -4px;
+      top: 2px;
+      width: 2px;
+      height: 3px;
+      background: currentColor;
+      border-radius: 1px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 2px;
+    }
+
+    .nav-title h2 {
+      margin: 0;
+      font-size: 1.65rem;
+      letter-spacing: 0;
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: var(--teal);
+    }
+
+    .hero {
+      min-height: 174px;
+      color: #fff;
+      background:
+        linear-gradient(145deg, rgba(15, 118, 110, 0.95), rgba(23, 33, 31, 0.96)),
+        #17211f;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero strong {
+      font-size: 1.75rem;
+      line-height: 1.05;
+      letter-spacing: 0;
+      max-width: 220px;
+    }
+
+    .hero small,
+    .tft small {
+      color: rgba(255, 255, 255, 0.76);
+      font-weight: 700;
+    }
+
+    .primary {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 8px;
+      color: white;
+      background: var(--teal);
+      font-size: 0.96rem;
+      font-weight: 800;
+    }
+
+    .secondary {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 13px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 0.96rem;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      border-top: 1px solid #edf1ef;
+    }
+
+    .row:first-child {
+      border-top: 0;
+    }
+
+    .symbol {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--mist);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .row b {
+      display: block;
+      font-size: 0.86rem;
+      line-height: 1.2;
+    }
+
+    .row span,
+    .metric span,
+    .cost span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+      line-height: 1.35;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: #fff;
+      background: var(--teal);
+      font-size: 0.68rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .badge.blue { background: var(--blue); }
+    .badge.amber { background: var(--amber); }
+    .badge.red { background: var(--red); }
+    .badge.green { background: var(--green); }
+    .badge.violet { background: var(--violet); }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric,
+    .cost {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      min-height: 82px;
+    }
+
+    .metric b,
+    .cost b {
+      display: block;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    .tft {
+      min-height: 176px;
+      border-radius: 8px;
+      color: white;
+      background:
+        linear-gradient(135deg, #050706, #0f766e 55%, #111827);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .tft-top,
+    .tft-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tft-distance {
+      font-size: 1.7rem;
+      font-weight: 900;
+    }
+
+    .turn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.15);
+      font-size: 1.9rem;
+      font-weight: 900;
+    }
+
+    .map {
+      height: 190px;
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(37, 99, 235, 0.22) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(15, 118, 110, 0.22) 50%, transparent 51%),
+        #e7f0ec;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .route-line {
+      position: absolute;
+      left: 36px;
+      right: 36px;
+      top: 92px;
+      height: 8px;
+      background: var(--teal);
+      border-radius: 999px;
+      transform: rotate(-18deg);
+    }
+
+    .route-line::before,
+    .route-line::after {
+      content: "";
+      position: absolute;
+      top: -8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 6px solid var(--teal);
+    }
+
+    .route-line::before { left: -5px; }
+    .route-line::after { right: -5px; border-color: var(--amber); }
+
+    .bike-panel {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .bike-art {
+      height: 72px;
+      border-radius: 8px;
+      background: #e1f2ef;
+      position: relative;
+    }
+
+    .bike-art::before,
+    .bike-art::after {
+      content: "";
+      position: absolute;
+      bottom: 13px;
+      width: 20px;
+      height: 20px;
+      border: 4px solid #17211f;
+      border-radius: 50%;
+    }
+
+    .bike-art::before { left: 10px; }
+    .bike-art::after { right: 10px; }
+
+    .bike-body {
+      position: absolute;
+      left: 20px;
+      top: 28px;
+      width: 34px;
+      height: 13px;
+      background: var(--teal);
+      border-radius: 8px 8px 4px 4px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #dbe4e0;
+    }
+
+    .progress i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--teal);
+    }
+
+    .costs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .cost b {
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+
+    .tabbar {
+      min-height: 62px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.95);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      padding: 6px 6px 8px;
+    }
+
+    .tab {
+      display: grid;
+      gap: 3px;
+      place-items: center;
+      color: #7a8581;
+      font-size: 0.62rem;
+      font-weight: 800;
+    }
+
+    .tab i {
+      width: 21px;
+      height: 21px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      font-style: normal;
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    .tab.active {
+      color: var(--teal);
+    }
+
+    .tab.active i {
+      background: #dff4ef;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding-top: 24px;
+      }
+
+      main {
+        padding-inline: 14px;
+      }
+
+      .phone {
+        width: min(100%, 350px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RoyalDash iOS</h1>
+    <p>Prototipo simples das telas possiveis para validar fluxo, hierarquia visual e prioridades antes de conectar o app ao TFT real da Himalayan 450.</p>
+  </header>
+
+  <main>
+    <section class="screen-grid" aria-label="Telas do prototipo">
+      <article>
+        <p class="screen-label">1. Primeira abertura</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>09:41</span><span class="status-icons"><i class="signal"></i><i class="battery"></i></span></div>
+            <div class="content">
+              <div class="hero">
+                <small>Himalayan 450</small>
+                <strong>RoyalDash pronto para o TFT</strong>
+                <small>Conexao local, rota e diagnostico em um unico app.</small>
+              </div>
+              <button class="primary">Iniciar configuracao</button>
+              <div class="card">
+                <div class="row">
+                  <i class="symbol">WF</i>
+                  <div><b>Rede local</b><span>Permite falar com o painel</span></div>
+                  <em class="badge blue">iOS</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">LC</i>
+                  <div><b>Localizacao</b><span>Usada durante a rota</span></div>
+                  <em class="badge green">OK</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">LG</i>
+                  <div><b>Logs de teste</b><span>Sem dados sensiveis</span></div>
+                  <em class="badge amber">Dev</em>
+                </div>
+              </div>
+            </div>
+            <nav class="tabbar" aria-label="abas">
+              <span class="tab active"><i>P</i>Painel</span><span class="tab"><i>R</i>Rotas</span><span class="tab"><i>M</i>Moto</span><span class="tab"><i>C</i>Custos</span><span class="tab"><i>A</i>Ajustes</span>
+            </nav>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <p class="screen-label">2. Conexao com o TFT</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>09:41</span><span class="status-icons"><i class="signal"></i><i class="battery"></i></span></div>
+            <div class="content">
+              <div class="nav-title"><h2>Painel</h2><span class="icon-button">?</span></div>
+              <div class="card">
+                <div class="row">
+                  <i class="symbol">WF</i>
+                  <div><b>RE_HIMALAYAN_450</b><span>Wi-Fi do painel encontrado</span></div>
+                  <em class="badge blue">Rede</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">AU</i>
+                  <div><b>Autenticacao</b><span>RSA/AES pendente</span></div>
+                  <em class="badge amber">Aguardar</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">ST</i>
+                  <div><b>Stream RTP</b><span>Destino 192.168.1.1:5000</span></div>
+                  <em class="badge">Pronto</em>
+                </div>
+              </div>
+              <button class="primary">Autenticar painel</button>
+              <button class="secondary">Usar modo simulado</button>
+              <div class="metrics">
+                <div class="metric"><span>UDP controle</span><b>:2000/:2002</b></div>
+                <div class="metric"><span>Video</span><b>H.264 RTP</b></div>
+                <div class="metric"><span>Pacotes</span><b>0</b></div>
+                <div class="metric"><span>Estado</span><b>Wi-Fi</b></div>
+              </div>
+            </div>
+            <nav class="tabbar" aria-label="abas">
+              <span class="tab active"><i>P</i>Painel</span><span class="tab"><i>R</i>Rotas</span><span class="tab"><i>M</i>Moto</span><span class="tab"><i>C</i>Custos</span><span class="tab"><i>A</i>Ajustes</span>
+            </nav>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <p class="screen-label">3. Painel ao vivo</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>09:41</span><span class="status-icons"><i class="signal"></i><i class="battery"></i></span></div>
+            <div class="content">
+              <div class="nav-title"><h2>RoyalDash</h2><span class="icon-button">II</span></div>
+              <div class="tft">
+                <div class="tft-top"><span class="tft-distance">126 km</span><small>2h18</small></div>
+                <div class="tft-bottom">
+                  <span class="turn">R</span>
+                  <div><strong>800 m</strong><br><small>BR-282</small></div>
+                  <em class="badge green">LIVE</em>
+                </div>
+              </div>
+              <div class="metrics">
+                <div class="metric"><span>Painel</span><b>Transmitindo</b></div>
+                <div class="metric"><span>Video</span><b>4 fps</b></div>
+                <div class="metric"><span>Pacotes</span><b>42</b></div>
+                <div class="metric"><span>iPhone</span><b>92%</b></div>
+              </div>
+              <div class="card">
+                <div class="row">
+                  <i class="symbol">RT</i>
+                  <div><b>Rota atual</b><span>Serra do Rastro</span></div>
+                  <em class="badge">Ativa</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">DG</i>
+                  <div><b>Ultimo evento</b><span>Frame RTP enviado</span></div>
+                  <em class="badge green">OK</em>
+                </div>
+              </div>
+            </div>
+            <nav class="tabbar" aria-label="abas">
+              <span class="tab active"><i>P</i>Painel</span><span class="tab"><i>R</i>Rotas</span><span class="tab"><i>M</i>Moto</span><span class="tab"><i>C</i>Custos</span><span class="tab"><i>A</i>Ajustes</span>
+            </nav>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <p class="screen-label">4. Rotas e envio ao TFT</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>09:41</span><span class="status-icons"><i class="signal"></i><i class="battery"></i></span></div>
+            <div class="content">
+              <div class="nav-title"><h2>Rotas</h2><span class="icon-button">+</span></div>
+              <div class="map"><span class="route-line"></span></div>
+              <div class="card">
+                <div class="row">
+                  <i class="symbol">DS</i>
+                  <div><b>Mirante da Serra</b><span>186 km - estrada cenario</span></div>
+                  <em class="badge violet">Favorito</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">NV</i>
+                  <div><b>Proxima instrucao</b><span>Direita em 800 m</span></div>
+                  <em class="badge">Enviar</em>
+                </div>
+              </div>
+              <div class="metrics">
+                <button class="secondary">Buscar</button>
+                <button class="secondary">Recalcular</button>
+                <button class="secondary">Enviar TFT</button>
+                <button class="secondary">Salvar</button>
+              </div>
+            </div>
+            <nav class="tabbar" aria-label="abas">
+              <span class="tab"><i>P</i>Painel</span><span class="tab active"><i>R</i>Rotas</span><span class="tab"><i>M</i>Moto</span><span class="tab"><i>C</i>Custos</span><span class="tab"><i>A</i>Ajustes</span>
+            </nav>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <p class="screen-label">5. Moto e manutencao</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>09:41</span><span class="status-icons"><i class="signal"></i><i class="battery"></i></span></div>
+            <div class="content">
+              <div class="nav-title"><h2>Moto</h2><span class="icon-button">E</span></div>
+              <div class="card bike-panel">
+                <div class="bike-art"><span class="bike-body"></span></div>
+                <div>
+                  <h3>Himalayan 450</h3>
+                  <span>Odometro 4.820 km</span>
+                  <div class="progress" aria-label="proxima revisao"><i style="width:58%"></i></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="row">
+                  <i class="symbol">OL</i>
+                  <div><b>Oleo do motor</b><span>Troca em 1.180 km</span></div>
+                  <em class="badge green">OK</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">CR</i>
+                  <div><b>Corrente</b><span>Lubrificar em 220 km</span></div>
+                  <em class="badge amber">Logo</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">PN</i>
+                  <div><b>Pneus</b><span>Calibragem semanal</span></div>
+                  <em class="badge">32/36</em>
+                </div>
+              </div>
+              <button class="primary">Adicionar manutencao</button>
+            </div>
+            <nav class="tabbar" aria-label="abas">
+              <span class="tab"><i>P</i>Painel</span><span class="tab"><i>R</i>Rotas</span><span class="tab active"><i>M</i>Moto</span><span class="tab"><i>C</i>Custos</span><span class="tab"><i>A</i>Ajustes</span>
+            </nav>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <p class="screen-label">6. Custos e ajustes</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>09:41</span><span class="status-icons"><i class="signal"></i><i class="battery"></i></span></div>
+            <div class="content">
+              <div class="nav-title"><h2>Ajustes</h2><span class="icon-button">S</span></div>
+              <div class="costs">
+                <div class="cost"><span>Total mes</span><b>R$ 486</b></div>
+                <div class="cost"><span>Combustivel</span><b>R$ 214</b></div>
+                <div class="cost"><span>Media</span><b>28 km/l</b></div>
+              </div>
+              <div class="card">
+                <div class="row">
+                  <i class="symbol">SS</i>
+                  <div><b>SSID</b><span>RE_HIMALAYAN_450</span></div>
+                  <em class="badge">Editar</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">PW</i>
+                  <div><b>Senha Wi-Fi</b><span>Salva no dispositivo</span></div>
+                  <em class="badge green">OK</em>
+                </div>
+                <div class="row">
+                  <i class="symbol">LG</i>
+                  <div><b>Logs seguros</b><span>Exportacao para diagnostico</span></div>
+                  <em class="badge amber">ZIP</em>
+                </div>
+              </div>
+              <button class="primary">Testar comunicacao</button>
+              <button class="secondary">Exportar diagnostico</button>
+            </div>
+            <nav class="tabbar" aria-label="abas">
+              <span class="tab"><i>P</i>Painel</span><span class="tab"><i>R</i>Rotas</span><span class="tab"><i>M</i>Moto</span><span class="tab"><i>C</i>Custos</span><span class="tab active"><i>A</i>Ajustes</span>
+            </nav>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

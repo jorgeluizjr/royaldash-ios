@@ -1,6 +1,7 @@
 # Screen Prototype
 
 O app agora tem um prototipo SwiftUI navegavel para orientar produto e fluxo.
+Tambem existe um prototipo visual estatico em `docs/prototype.html`, que pode ser aberto direto no navegador sem Xcode.
 
 ## Telas
 
