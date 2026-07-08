@@ -224,10 +224,16 @@ private struct PrototypeScreen<Content: View>: View {
                 VStack(alignment: .leading, spacing: 18) {
                     content
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 96)
             }
             .background(Color(.systemGroupedBackground))
             .navigationTitle(title)
+            .toolbarBackground(Color(.systemGroupedBackground), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color(.systemBackground), for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
         }
     }
 }
