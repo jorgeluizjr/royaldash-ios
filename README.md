@@ -23,6 +23,7 @@ The repository starts with a pure Swift package:
 - receive loop glue that routes dispatcher replies through the transport
 - high-level dash session facade for auth, incoming events, control commands, and RTP sends
 - selected dash command bytes
+- H.264 NAL processor for Annex-B/AVCC normalization, AUD/SEI filtering, and SPS/PPS caching
 - RTP packetizer
 - offline fake dash session and demo CLI
 - unit tests for protocol-critical behavior
@@ -52,3 +53,4 @@ See:
 - `docs/proposta-ios-himalayan-450.md`
 - `docs/github-actions-ios.md`
 - `docs/dash-session.md`
+- `docs/h264-nal-processor.md`
