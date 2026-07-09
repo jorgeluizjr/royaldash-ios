@@ -95,10 +95,10 @@ struct H264TestPatternEncoder {
         VTSessionSetProperty(session, key: kVTCompressionPropertyKey_AllowFrameReordering, value: kCFBooleanFalse)
         VTSessionSetProperty(session, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_Baseline_AutoLevel)
 
-        var keyFrameInterval = 1 as CFNumber
+        let keyFrameInterval = 1 as CFNumber
         VTSessionSetProperty(session, key: kVTCompressionPropertyKey_MaxKeyFrameInterval, value: keyFrameInterval)
 
-        var bitRate = 350_000 as CFNumber
+        let bitRate = 350_000 as CFNumber
         VTSessionSetProperty(session, key: kVTCompressionPropertyKey_AverageBitRate, value: bitRate)
         VTCompressionSessionPrepareToEncodeFrames(session)
 
@@ -164,7 +164,7 @@ struct H264TestPatternEncoder {
         var pointer: UnsafePointer<UInt8>?
         var size = 0
         var count = 0
-        var headerLength = 0
+        var headerLength: Int32 = 0
         let status = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(
             format,
             parameterSetIndex: index,
