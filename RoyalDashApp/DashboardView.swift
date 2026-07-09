@@ -5,10 +5,7 @@ struct DashboardView: View {
     @State private var selectedTab: AppTab = .panel
 
     var body: some View {
-        ZStack {
-            Color(.systemGroupedBackground)
-                .ignoresSafeArea()
-
+        VStack(spacing: 0) {
             Group {
                 switch selectedTab {
                 case .panel:
@@ -24,10 +21,10 @@ struct DashboardView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+
             DashboardTabBar(selectedTab: $selectedTab)
         }
+        .background(Color(.systemGroupedBackground))
         .tint(.teal)
     }
 }
@@ -260,7 +257,7 @@ private struct DashboardTabBar: View {
         }
         .padding(.horizontal, 12)
         .padding(.top, 8)
-        .padding(.bottom, 8)
+        .padding(.bottom, 6)
         .background(.regularMaterial)
     }
 }
