@@ -19,9 +19,9 @@ final class LiveDashRuntime {
 
     init(
         ssid: String = "RE_HIMALAYAN_450",
-        config: DashTransportConfig = .tripperDash
+        config: DashTransportConfig = .tripperDashUnicastControl
     ) {
-        let peer = CountingDatagramPeer()
+        let peer = CountingDatagramPeer(localPort: config.controlLocalPort)
         self.peer = peer
         self.receiver = NetworkUdpReceiver(port: config.receiveLocalPort)
         self.session = DashSession(
@@ -175,8 +175,8 @@ private final class CountingDatagramPeer: DatagramPeer {
     private let networkPeer: NetworkUdpPeer
     private(set) var packetCount = 0
 
-    init(networkPeer: NetworkUdpPeer = NetworkUdpPeer()) {
-        self.networkPeer = networkPeer
+    init(localPort: UInt16? = nil) {
+        self.networkPeer = NetworkUdpPeer(localPort: localPort)
     }
 
     func send(_ bytes: [UInt8], to endpoint: UdpEndpoint) throws {

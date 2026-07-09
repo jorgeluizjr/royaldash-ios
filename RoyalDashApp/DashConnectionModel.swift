@@ -25,7 +25,7 @@ final class DashConnectionModel: ObservableObject {
                 try advanceLive()
             }
         } catch {
-            phase = .failed("Falha: \(error.localizedDescription)")
+            phase = .failed(error.localizedDescription)
             lastEvent = mode == .simulated ? "Erro no fluxo simulado" : "Erro no fluxo real"
         }
     }
