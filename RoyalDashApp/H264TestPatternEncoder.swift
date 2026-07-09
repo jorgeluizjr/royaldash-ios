@@ -64,11 +64,15 @@ struct H264TestPatternEncoder {
     private func encodeSample() throws -> CMSampleBuffer {
         let pixelBuffer = try makePixelBuffer()
         let result = SampleResult()
+        let retainedResult = Unmanaged.passRetained(result)
+        defer {
+            retainedResult.release()
+        }
+
         let callback: VTCompressionOutputCallback = { _, refCon, status, _, sampleBuffer in
-            let result = Unmanaged<SampleResult>.fromOpaque(refCon!).takeUnretainedValue()
-            result.status = status
-            result.sampleBuffer = sampleBuffer
-            result.group.leave()
+            guard let refCon else { return }
+            let result = Unmanaged<SampleResult>.fromOpaque(refCon).takeUnretainedValue()
+            result.complete(status: status, sampleBuffer: sampleBuffer)
         }
 
         var session: VTCompressionSession?
@@ -81,13 +85,14 @@ struct H264TestPatternEncoder {
             imageBufferAttributes: nil,
             compressedDataAllocator: nil,
             outputCallback: callback,
-            refcon: Unmanaged.passUnretained(result).toOpaque(),
+            refcon: retainedResult.toOpaque(),
             compressionSessionOut: &session
         )
         guard createStatus == noErr, let session else {
             throw H264TestPatternEncoderError.compressionSessionCreationFailed(createStatus)
         }
         defer {
+            VTCompressionSessionCompleteFrames(session, untilPresentationTimeStamp: .invalid)
             VTCompressionSessionInvalidate(session)
         }
 
@@ -102,7 +107,6 @@ struct H264TestPatternEncoder {
         VTSessionSetProperty(session, key: kVTCompressionPropertyKey_AverageBitRate, value: bitRate)
         VTCompressionSessionPrepareToEncodeFrames(session)
 
-        result.group.enter()
         let encodeStatus = VTCompressionSessionEncodeFrame(
             session,
             imageBuffer: pixelBuffer,
@@ -113,18 +117,18 @@ struct H264TestPatternEncoder {
             infoFlagsOut: nil
         )
         guard encodeStatus == noErr else {
-            result.group.leave()
             throw H264TestPatternEncoderError.encodeFailed(encodeStatus)
         }
         VTCompressionSessionCompleteFrames(session, untilPresentationTimeStamp: .invalid)
 
-        guard result.group.wait(timeout: .now() + 2) == .success else {
+        guard result.wait(timeout: .now() + 2) else {
             throw H264TestPatternEncoderError.timedOut
         }
-        guard result.status == noErr else {
-            throw H264TestPatternEncoderError.encodeFailed(result.status)
+        let snapshot = result.snapshot()
+        guard snapshot.status == noErr else {
+            throw H264TestPatternEncoderError.encodeFailed(snapshot.status)
         }
-        guard let sampleBuffer = result.sampleBuffer else {
+        guard let sampleBuffer = snapshot.sampleBuffer else {
             throw H264TestPatternEncoderError.noSampleProduced
         }
         return sampleBuffer
@@ -229,7 +233,33 @@ struct H264TestPatternEncoder {
 }
 
 private final class SampleResult {
-    let group = DispatchGroup()
-    var status: OSStatus = noErr
-    var sampleBuffer: CMSampleBuffer?
+    private let semaphore = DispatchSemaphore(value: 0)
+    private let lock = NSLock()
+    private var didComplete = false
+    private var status: OSStatus = noErr
+    private var sampleBuffer: CMSampleBuffer?
+
+    func complete(status: OSStatus, sampleBuffer: CMSampleBuffer?) {
+        lock.lock()
+        guard !didComplete else {
+            lock.unlock()
+            return
+        }
+
+        didComplete = true
+        self.status = status
+        self.sampleBuffer = sampleBuffer
+        lock.unlock()
+        semaphore.signal()
+    }
+
+    func wait(timeout: DispatchTime) -> Bool {
+        semaphore.wait(timeout: timeout) == .success
+    }
+
+    func snapshot() -> (status: OSStatus, sampleBuffer: CMSampleBuffer?) {
+        lock.lock()
+        defer { lock.unlock() }
+        return (status, sampleBuffer)
+    }
 }
