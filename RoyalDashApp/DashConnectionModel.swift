@@ -57,7 +57,7 @@ final class DashConnectionModel: ObservableObject {
         case .wifi:
             try liveRuntime?.startAuthentication()
         case .authenticating:
-            try liveRuntime?.startProjectionProbe()
+            liveRuntime?.startProjectionProbe()
         case .streaming:
             disconnect()
         }
