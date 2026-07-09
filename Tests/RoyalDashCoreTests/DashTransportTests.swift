@@ -59,4 +59,11 @@ final class DashTransportTests: XCTestCase {
         XCTAssertEqual(DashTransportConfig.loopbackFakeDash.controlLocalPort, 2000)
         XCTAssertEqual(DashTransportConfig.loopbackFakeDash.receiveLocalPort, 2002)
     }
+
+    func testTripperDashUnicastControlConfigTargetsDashIp() {
+        XCTAssertEqual(DashTransportConfig.tripperDashUnicastControl.controlBroadcast, UdpEndpoint(host: "192.168.1.1", port: 2000))
+        XCTAssertEqual(DashTransportConfig.tripperDashUnicastControl.dashRtp, UdpEndpoint(host: "192.168.1.1", port: 5000))
+        XCTAssertEqual(DashTransportConfig.tripperDashUnicastControl.controlLocalPort, 2000)
+        XCTAssertEqual(DashTransportConfig.tripperDashUnicastControl.receiveLocalPort, 2002)
+    }
 }

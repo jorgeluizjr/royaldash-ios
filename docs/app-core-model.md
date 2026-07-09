@@ -21,7 +21,10 @@ O modo `TFT real` usa `LiveDashRuntime`, que encapsula:
 
 - `NetworkUdpPeer` para envio UDP;
 - `NetworkUdpReceiver` na porta local de recepcao configurada;
-- `DashSession` com a configuracao `.tripperDash`.
+- `DashSession` com a configuracao `.tripperDashUnicastControl`, que envia controle direto para `192.168.1.1:2000`.
+- porta local `2000` fixada para o envio de controle.
+
+O envio unicast e usado no app porque o envio UDP para broadcast (`192.168.1.255`) pode falhar no iOS com erro generico do `Network.framework`.
 
 Fluxo esperado para o primeiro teste no iPhone:
 

@@ -219,22 +219,20 @@ private struct PrototypeScreen<Content: View>: View {
     @ViewBuilder let content: Content
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    content
-                }
-                .padding(.horizontal)
-                .padding(.top, 8)
-                .padding(.bottom, 96)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Text(title)
+                    .font(.title.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 8)
+
+                content
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle(title)
-            .toolbarBackground(Color(.systemGroupedBackground), for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color(.systemBackground), for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
+            .padding(.horizontal)
+            .padding(.bottom, 96)
         }
+        .background(Color(.systemGroupedBackground))
+        .scrollContentBackground(.hidden)
     }
 }
 

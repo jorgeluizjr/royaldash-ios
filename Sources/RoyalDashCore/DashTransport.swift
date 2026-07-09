@@ -54,6 +54,13 @@ public struct DashTransportConfig: Equatable {
         receiveLocalPort: 2002
     )
 
+    public static let tripperDashUnicastControl = DashTransportConfig(
+        controlBroadcast: UdpEndpoint(host: "192.168.1.1", port: 2000),
+        dashRtp: UdpEndpoint(host: "192.168.1.1", port: 5000),
+        controlLocalPort: 2000,
+        receiveLocalPort: 2002
+    )
+
     public static let loopbackFakeDash = DashTransportConfig(
         controlBroadcast: UdpEndpoint(host: "127.0.0.1", port: 2000),
         dashRtp: UdpEndpoint(host: "127.0.0.1", port: 5000),
@@ -104,10 +111,26 @@ public enum NetworkUdpPeerError: Error, Equatable {
     case sendFailed(String)
 }
 
+extension NetworkUdpPeerError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .invalidPort(let port):
+            return "Porta UDP invalida: \(port)."
+        case .sendFailed(let reason):
+            return "Falha ao enviar UDP: \(reason)."
+        }
+    }
+}
+
 public final class NetworkUdpPeer: DatagramPeer {
     private let queue: DispatchQueue
+    private let localPort: UInt16?
 
-    public init(queue: DispatchQueue = DispatchQueue(label: "RoyalDash.NetworkUdpPeer")) {
+    public init(
+        localPort: UInt16? = nil,
+        queue: DispatchQueue = DispatchQueue(label: "RoyalDash.NetworkUdpPeer")
+    ) {
+        self.localPort = localPort
         self.queue = queue
     }
 
@@ -116,10 +139,21 @@ public final class NetworkUdpPeer: DatagramPeer {
             throw NetworkUdpPeerError.invalidPort(endpoint.port)
         }
 
+        let parameters = NWParameters.udp
+        if let localPort {
+            guard let nwLocalPort = NWEndpoint.Port(rawValue: localPort) else {
+                throw NetworkUdpPeerError.invalidPort(localPort)
+            }
+            parameters.requiredLocalEndpoint = .hostPort(
+                host: .ipv4(IPv4Address("0.0.0.0")!),
+                port: nwLocalPort
+            )
+        }
+
         let connection = NWConnection(
             host: NWEndpoint.Host(endpoint.host),
             port: port,
-            using: .udp
+            using: parameters
         )
 
         let group = DispatchGroup()
