@@ -5,36 +5,28 @@ struct DashboardView: View {
     @State private var selectedTab: AppTab = .panel
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            PanelView(connection: connection)
-                .tabItem {
-                    Label("Painel", systemImage: "motorcycle")
-                }
-                .tag(AppTab.panel)
+        ZStack {
+            Color(.systemGroupedBackground)
+                .ignoresSafeArea()
 
-            RoutesView()
-                .tabItem {
-                    Label("Rotas", systemImage: "map")
+            Group {
+                switch selectedTab {
+                case .panel:
+                    PanelView(connection: connection)
+                case .routes:
+                    RoutesView()
+                case .garage:
+                    GarageView()
+                case .costs:
+                    CostsView()
+                case .settings:
+                    SettingsView()
                 }
-                .tag(AppTab.routes)
-
-            GarageView()
-                .tabItem {
-                    Label("Moto", systemImage: "wrench.and.screwdriver")
-                }
-                .tag(AppTab.garage)
-
-            CostsView()
-                .tabItem {
-                    Label("Custos", systemImage: "fuelpump")
-                }
-                .tag(AppTab.costs)
-
-            SettingsView()
-                .tabItem {
-                    Label("Ajustes", systemImage: "gearshape")
-                }
-                .tag(AppTab.settings)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            DashboardTabBar(selectedTab: $selectedTab)
         }
         .tint(.teal)
     }
@@ -223,16 +215,53 @@ private struct PrototypeScreen<Content: View>: View {
             VStack(alignment: .leading, spacing: 18) {
                 Text(title)
                     .font(.title.bold())
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 12)
 
                 content
             }
             .padding(.horizontal)
-            .padding(.bottom, 96)
+            .padding(.bottom, 18)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color(.systemGroupedBackground))
         .scrollContentBackground(.hidden)
+    }
+}
+
+private struct DashboardTabBar: View {
+    @Binding var selectedTab: AppTab
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(AppTab.allCases) { tab in
+                Button {
+                    selectedTab = tab
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: tab.symbol)
+                            .font(.system(size: 23, weight: .semibold))
+                            .frame(height: 26)
+                        Text(tab.title)
+                            .font(.caption2.weight(.semibold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .foregroundStyle(selectedTab == tab ? Color.teal : Color.secondary)
+                    .background(
+                        selectedTab == tab ? Color.teal.opacity(0.16) : Color.clear,
+                        in: RoundedRectangle(cornerRadius: 8)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
+        .padding(.bottom, 8)
+        .background(.regularMaterial)
     }
 }
 
@@ -521,12 +550,44 @@ private struct PrototypeAction: Identifiable {
     let subtitle: String
 }
 
-private enum AppTab {
+private enum AppTab: CaseIterable, Identifiable {
     case panel
     case routes
     case garage
     case costs
     case settings
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .panel:
+            return "Painel"
+        case .routes:
+            return "Rotas"
+        case .garage:
+            return "Moto"
+        case .costs:
+            return "Custos"
+        case .settings:
+            return "Ajustes"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .panel:
+            return "motorcycle"
+        case .routes:
+            return "map"
+        case .garage:
+            return "wrench.and.screwdriver"
+        case .costs:
+            return "fuelpump"
+        case .settings:
+            return "gearshape"
+        }
+    }
 }
 
 private extension DashConnectionPhase {

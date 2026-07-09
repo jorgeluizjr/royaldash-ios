@@ -233,6 +233,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = RoyalDash;
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "RoyalDash connects to the motorcycle dash over the local Wi-Fi network.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jorgeluizjr.royaldash;
@@ -255,6 +256,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = RoyalDash;
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "RoyalDash connects to the motorcycle dash over the local Wi-Fi network.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jorgeluizjr.royaldash;
