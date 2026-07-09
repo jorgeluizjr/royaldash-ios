@@ -15,6 +15,7 @@ final class LiveDashRuntime {
     private let peer: CountingDatagramPeer
     private let receiver: NetworkUdpReceiver
     private var session: DashSession<CountingDatagramPeer>
+    private let testPatternEncoder = H264TestPatternEncoder()
     private var isReceiverStarted = false
 
     init(
@@ -53,17 +54,15 @@ final class LiveDashRuntime {
 
     func startProjectionProbe() throws {
         try session.sendProjectionFrame()
-        try session.sendRtp([
-            0x80, 0xE0, 0x00, 0x01,
-            0x00, 0x00, 0x0E, 0x10,
-            0x10, 0x20, 0x30, 0x40,
-            0x65, 0x88,
-        ])
+        let packets = try testPatternEncoder.makeRtpPackets()
+        for packet in packets {
+            try session.sendRtp(packet)
+        }
         publish(
             phase: .streaming,
             controlStatus: "OK",
-            rtpStatus: "probe",
-            lastEvent: "Frame de teste enviado ao RTP do TFT"
+            rtpStatus: "\(packets.count) RTP",
+            lastEvent: "Frame H.264 de teste enviado ao TFT"
         )
     }
 

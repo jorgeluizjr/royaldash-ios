@@ -34,4 +34,4 @@ Fluxo esperado para o primeiro teste no iPhone:
 4. Tocar em `Autenticar` para enviar o auth request e ouvir respostas.
 5. Tocar em `Iniciar Stream` para enviar um frame/RTP de prova.
 
-Essa etapa ainda nao gera video H.264 real da UI; ela cria o caminho de rede para validar permissao local, portas UDP, autenticacao e diagnostico basico com a moto.
+Essa etapa envia um unico frame H.264 de teste gerado com `VideoToolbox`, no tamanho 526 x 300, packetizado em RTP. Ainda nao e um stream continuo da UI; o objetivo e validar se o TFT decodifica um frame real sem deixar nada permanente no painel.
