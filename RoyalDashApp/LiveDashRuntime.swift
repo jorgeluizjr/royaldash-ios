@@ -16,7 +16,10 @@ final class LiveDashRuntime {
     private let receiver: NetworkUdpReceiver
     private var session: DashSession<CountingDatagramPeer>
     private let testPatternEncoder = H264TestPatternEncoder()
+    private let projectionQueue = DispatchQueue(label: "RoyalDash.LiveDashRuntime.projection", qos: .userInitiated)
+    private let stateLock = NSLock()
     private var isReceiverStarted = false
+    private var isProjectionStarting = false
 
     init(
         ssid: String = "RE_HIMALAYAN_450",
@@ -52,23 +55,59 @@ final class LiveDashRuntime {
         )
     }
 
-    func startProjectionProbe() throws {
-        try session.sendProjectionFrame()
-        let packets = try testPatternEncoder.makeRtpPackets()
-        for packet in packets {
-            try session.sendRtp(packet)
+    func startProjectionProbe() {
+        stateLock.lock()
+        guard !isProjectionStarting else {
+            stateLock.unlock()
+            return
         }
+        isProjectionStarting = true
+        stateLock.unlock()
+
         publish(
-            phase: .streaming,
+            phase: .authenticating,
             controlStatus: "OK",
-            rtpStatus: "\(packets.count) RTP",
-            lastEvent: "Frame H.264 de teste enviado ao TFT"
+            rtpStatus: "H.264",
+            lastEvent: "Gerando frame H.264 de teste"
         )
+
+        projectionQueue.async { [weak self] in
+            guard let self else { return }
+            defer { self.finishProjectionStart() }
+
+            do {
+                try self.session.sendProjectionFrame()
+                let packets = try self.testPatternEncoder.makeRtpPackets()
+                for packet in packets {
+                    try self.session.sendRtp(packet)
+                }
+                self.publish(
+                    phase: .streaming,
+                    controlStatus: "OK",
+                    rtpStatus: "\(packets.count) RTP",
+                    lastEvent: "Frame H.264 de teste enviado ao TFT"
+                )
+            } catch {
+                self.publish(
+                    phase: .failed(error.localizedDescription),
+                    controlStatus: "Erro",
+                    rtpStatus: "--",
+                    lastEvent: "Falha ao iniciar stream H.264"
+                )
+            }
+        }
     }
 
     func stop() {
         receiver.stop()
         isReceiverStarted = false
+        finishProjectionStart()
+    }
+
+    private func finishProjectionStart() {
+        stateLock.lock()
+        isProjectionStarting = false
+        stateLock.unlock()
     }
 
     private func startReceiverIfNeeded() throws {
@@ -172,7 +211,14 @@ final class LiveDashRuntime {
 
 private final class CountingDatagramPeer: DatagramPeer {
     private let networkPeer: NetworkUdpPeer
-    private(set) var packetCount = 0
+    private let lock = NSLock()
+    private var count = 0
+
+    var packetCount: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
+    }
 
     init(localPort: UInt16? = nil) {
         self.networkPeer = NetworkUdpPeer(localPort: localPort)
@@ -180,6 +226,8 @@ private final class CountingDatagramPeer: DatagramPeer {
 
     func send(_ bytes: [UInt8], to endpoint: UdpEndpoint) throws {
         try networkPeer.send(bytes, to: endpoint)
-        packetCount += 1
+        lock.lock()
+        count += 1
+        lock.unlock()
     }
 }
